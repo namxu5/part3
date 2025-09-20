@@ -1,0 +1,65 @@
+<div class="home-container">
+  <div class="hero-section">
+    <h1 class="hero-title">
+      <i class="hero-icon">🏪</i>
+      Hệ thống quản lý sản phẩm
+    </h1>
+    <p class="hero-subtitle">Tìm kiếm và quản lý sản phẩm một cách dễ dàng</p>
+  </div>
+
+  <div class="search-section">
+    <h2 class="section-title">Tìm kiếm sản phẩm</h2>
+    <form class="search-form" method="GET" action="/products">
+      <div class="search-input-group">
+        <input 
+          type="text" 
+          name="search" 
+          placeholder="Nhập tên sản phẩm..." 
+          class="search-input-main"
+        >
+        <button type="submit" class="search-btn">
+          <i class="btn-icon">🔍</i>
+          Tìm kiếm
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="suppliers-section">
+    <h2 class="section-title">Lọc theo nhà cung cấp</h2>
+    <% if (suppliers.length === 0) { %>
+      <div class="empty-suppliers">
+        <i class="empty-icon">🏢</i>
+        <p>Chưa có nhà cung cấp nào</p>
+      </div>
+    <% } else { %>
+      <div class="suppliers-grid">
+        <% suppliers.forEach(supplier => { %>
+          <a href="/products?supplier=<%= supplier._id %>" class="supplier-card">
+            <div class="supplier-icon">🏢</div>
+            <h3 class="supplier-name"><%= supplier.name %></h3>
+            <p class="supplier-address"><%= supplier.address %></p>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="quick-actions">
+    <h2 class="section-title">Thao tác nhanh</h2>
+    <div class="action-buttons">
+      <a href="/products" class="action-btn">
+        <i class="btn-icon">📦</i>
+        Xem tất cả sản phẩm
+      </a>
+      <a href="/suppliers" class="action-btn">
+        <i class="btn-icon">🏢</i>
+        Xem nhà cung cấp
+      </a>
+      <a href="/products/new" class="action-btn primary">
+        <i class="btn-icon">➕</i>
+        Thêm sản phẩm mới
+      </a>
+    </div>
+  </div>
+</div>

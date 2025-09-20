@@ -1,0 +1,121 @@
+<% if (!Array.isArray(products)) { %>
+  <div class="error-container">
+    <div class="error-card">
+      <i class="error-icon">⚠️</i>
+      <h3>Lỗi dữ liệu</h3>
+      <p>Dữ liệu không hợp lệ hoặc bạn đang truy cập nhầm API JSON.</p>
+      <p>Vui lòng truy cập đúng đường dẫn <span class="highlight">/products</span> để xem giao diện bảng sản phẩm.</p>
+    </div>
+  </div>
+<% } else { %>
+<div class="products-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="title-icon">📦</i>
+        Danh sách sản phẩm
+      </h1>
+      <p class="page-subtitle">Quản lý sản phẩm, giá, số lượng và nhà cung cấp</p>
+    </div>
+    <a href="/products/new" class="add-btn">
+      <i class="btn-icon">+</i>
+      Thêm sản phẩm
+    </a>
+  </div>
+
+  <!-- Search and Filter Form -->
+  <div class="search-filter-container">
+    <form method="GET" action="/products" class="search-filter-form">
+      <div class="search-group">
+        <label for="search">Tìm kiếm sản phẩm:</label>
+        <input 
+          type="text" 
+          id="search" 
+          name="search" 
+          value="<%= search %>" 
+          placeholder="Nhập tên sản phẩm..." 
+          class="search-input"
+        >
+      </div>
+      
+      <div class="filter-group">
+        <label for="supplier">Lọc theo nhà cung cấp:</label>
+        <select id="supplier" name="supplier" class="filter-select">
+          <option value="">Tất cả nhà cung cấp</option>
+          <% if (suppliers && suppliers.length > 0) { %>
+            <% suppliers.forEach(supplier => { %>
+              <option value="<%= supplier._id %>" <%= selectedSupplier === supplier._id.toString() ? 'selected' : '' %>>
+                <%= supplier.name %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <i class="btn-icon">🔍</i>
+          Tìm kiếm
+        </button>
+        <a href="/products" class="btn btn-secondary">
+          <i class="btn-icon">🔄</i>
+          Xóa bộ lọc
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <% if (products.length === 0) { %>
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>Chưa có sản phẩm nào</h3>
+      <p>Hãy thêm sản phẩm đầu tiên để bắt đầu quản lý</p>
+      <a href="/products/new" class="empty-btn">Thêm sản phẩm ngay</a>
+    </div>
+  <% } else { %>
+    <div class="products-grid">
+      <% products.forEach(product => { %>
+        <div class="product-card">
+          <div class="card-header">
+            <h3 class="product-name"><%= product.name %></h3>
+            <div class="product-price">
+              <%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) %>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <div class="product-info">
+              <div class="info-item">
+                <span class="info-label">Số lượng:</span>
+                <span class="info-value quantity <%= product.quantity < 10 ? 'low-stock' : '' %>">
+                  <%= product.quantity %>
+                </span>
+              </div>
+              
+              <div class="info-item">
+                <span class="info-label">Nhà cung cấp:</span>
+                <span class="info-value supplier">
+                  <%= product.supplier ? product.supplier.name : 'Chưa có' %>
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-actions">
+            <a href="/products/<%= product._id %>/edit" class="action-btn edit-btn">
+              <i class="btn-icon">✏️</i>
+              Sửa
+            </a>
+            <form method="POST" action="/products/api/<%= product._id %>?_method=DELETE" class="delete-form">
+              <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
+                <i class="btn-icon">🗑️</i>
+                Xóa
+              </button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<% } %>
